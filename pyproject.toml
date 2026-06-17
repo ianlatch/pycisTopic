@@ -12,7 +12,7 @@ authors = [
 description = "pycisTopic is a Python module to simultaneously identify cell states and cis-regulatory topics from single cell epigenomics data."
 readme = "README.rst"
 version = "2.0a"
-requires-python = "~=3.11"
+requires-python = ">=3.11,<3.14"
 keywords = ["scATAC", "cell state", "topic modeling", "LDA", "enhancer"]
 license = { file = "LICENSE.txt" }
 classifiers = [
@@ -24,26 +24,25 @@ classifiers = [
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
 dependencies = [
-  "numpy >= 1.20.3",
-  "pandas == 1.5",
-  "polars >= 0.18.3",
+  "numpy >= 1.23",
+  "pandas >= 2.2, < 3",
+  "polars >= 1.0",
   "pyarrow >= 8.0.0",
   "pyranges < 0.0.128",
   "ray",
   "scatac_fragment_tools",
   "scikit-learn",
   "lda",
-  "matplotlib < 3.7",
+  "matplotlib >= 3.8",
   "tmtoolkit",
   "gensim",
-  "macs2",
+  "macs3",
   "pybiomart",
   "pyscenic",
   "scrublet",
@@ -58,7 +57,10 @@ dependencies = [
   "bbknn",
   "loomxpy",
   "bs4",
-  "lxml"
+  "lxml",
+  # pyranges (<0.0.128) imports pkg_resources at runtime, which was removed in
+  # setuptools 81. Keep setuptools<81 so pkg_resources stays importable.
+  "setuptools < 81"
 ]
 
 [project.optional-dependencies]
@@ -89,7 +91,7 @@ Changelog = "https://github.com/aertslab/pycisTopic/releases"
 pycistopic = "pycisTopic.cli.pycistopic:main"
 
 [tool.ruff]
-target-version = "py38"
+target-version = "py311"
 line-length = 88
 fix = true
 

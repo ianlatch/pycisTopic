@@ -1,4 +1,4 @@
-FROM python:3.8-slim AS compile-image
+FROM python:3.12-slim AS compile-image
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN BUILDPKGS="build-essential \
@@ -25,7 +25,7 @@ RUN pip install --no-cache-dir --upgrade pip wheel && \
     pip install --no-cache-dir papermill && \
     pip install --no-cache-dir igv_jupyterlab && \
     pip install --no-cache-dir bs4 && \
-    pip install --no-cache-dir MACS2 && \
+    pip install --no-cache-dir macs3 && \
     pip install --no-cache-dir lxml && \
     pip install --no-cache-dir tspex && \
     pip install --no-cache-dir -r /tmp/requirements.txt
@@ -56,7 +56,7 @@ RUN cd /tmp/pycistarget && \
     pip install . && \
     cd .. && rm -rf pycistarget
 
-FROM python:3.8-slim AS build-image
+FROM python:3.12-slim AS build-image
 
 RUN mkdir -p /usr/share/man/man1 && \
     apt-get -y update && \

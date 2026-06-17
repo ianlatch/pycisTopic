@@ -9,7 +9,6 @@ import joblib
 import pandas as pd
 import pyranges as pr
 import ray
-from pycisTopic.cistopic_class import CistopicObject
 from scatac_fragment_tools.library.bigwig.fragments_to_bigwig import (
     fragments_to_bw,
     read_fragments_to_polars_df,
@@ -18,6 +17,8 @@ from scatac_fragment_tools.library.split.split_fragments_by_cell_type import (
     _santize_string_for_filename,
     split_fragment_files_by_cell_type,
 )
+
+from pycisTopic.cistopic_class import CistopicObject
 
 # FIXME
 from .utils import *
@@ -57,7 +58,7 @@ def export_pseudobulk(
     Create pseudobulks as bed and bigwig from single cell fragments file given a barcode annotation.
 
     Parameters
-    ---------
+    ----------
     input_data: CistopicObject or pd.DataFrame
             A :class:`CistopicObject` containing the specified `variable` as a column in :class:`CistopicObject.cell_data` or a cell metadata
             :class:`pd.DataFrame` containing barcode as rows, containing the specified `variable` as a column (additional columns are
@@ -95,6 +96,7 @@ def export_pseudobulk(
     dict
             A dictionary containing the paths to the newly created bed fragments files per group a dictionary containing the paths to the
             newly created bigwig files per group.
+
     """
     # Create logger
     level = logging.INFO
@@ -190,7 +192,7 @@ def export_pseudobulk(
             bw_filename = os.path.join(bigwig_path, f"{_santize_string_for_filename(cell_type)}.bw"),
             log = log
         )
-        for cell_type in bed_paths.keys()
+        for cell_type in bed_paths
     )
     bw_paths = {}
     for cell_type in cell_data[variable].unique():
@@ -220,12 +222,12 @@ def peak_calling(
     **kwargs
 ):
     """
-    Performs pseudobulk peak calling with MACS2. It requires to have MACS2 installed (https://github.com/macs3-project/MACS).
+    Performs pseudobulk peak calling with MACS2. It requires to have MACS3 installed (https://github.com/macs3-project/MACS).
 
     Parameters
-    ---------
+    ----------
     macs_path: str
-            Path to MACS binary (e.g. /xxx/MACS/xxx/bin/macs2).
+            Path to MACS binary (e.g. /xxx/MACS/xxx/bin/macs3).
     bed_paths: dict
             A dictionary containing group label as name and the path to their corresponding fragments bed file as value.
     outdir: str
@@ -254,6 +256,7 @@ def peak_calling(
     ------
     dict
             A dictionary containing each group label as names and :class:`pr.PyRanges` with MACS2 narrow peaks as values.
+
     """
     if not os.path.exists(outdir):
         os.makedirs(outdir)
@@ -325,12 +328,12 @@ def macs_call_peak(
     skip_empty_peaks: bool = False
 ):
     """
-    Performs pseudobulk peak calling with MACS2 in a group. It requires to have MACS2 installed (https://github.com/macs3-project/MACS).
+    Performs pseudobulk peak calling with MACS2 in a group. It requires to have MACS3 installed (https://github.com/macs3-project/MACS).
 
     Parameters
-    ---------
+    ----------
     macs_path: str
-            Path to MACS binary (e.g. /xxx/MACS/xxx/bin/macs2).
+            Path to MACS binary (e.g. /xxx/MACS/xxx/bin/macs3).
     bed_path: str
             Path to fragments file bed file.
     name: str
@@ -359,6 +362,7 @@ def macs_call_peak(
     ------
     dict
             A :class:`pr.PyRanges` with MACS2 narrow peaks as values.
+
     """
     # Create logger
     level = logging.INFO
@@ -400,12 +404,12 @@ def macs_call_peak_ray(
     skip_empty_peaks: bool = False
 ):
     """
-    Performs pseudobulk peak calling with MACS2 in a group. It requires to have MACS2 installed (https://github.com/macs3-project/MACS).
+    Performs pseudobulk peak calling with MACS2 in a group. It requires to have MACS3 installed (https://github.com/macs3-project/MACS).
 
     Parameters
-    ---------
+    ----------
     macs_path: str
-            Path to MACS binary (e.g. /xxx/MACS/xxx/bin/macs2).
+            Path to MACS binary (e.g. /xxx/MACS/xxx/bin/macs3).
     bed_path: str
             Path to fragments file bed file.
     name: str
@@ -434,6 +438,7 @@ def macs_call_peak_ray(
     ------
     dict
             A :class:`pr.PyRanges` with MACS2 narrow peaks as values.
+
     """
     # Create logger
     level = logging.INFO
@@ -464,9 +469,9 @@ def macs_call_peak_ray(
 class MACSCallPeak:
     """
     Parameters
-    ---------
+    ----------
     macs_path: str
-            Path to MACS binary (e.g. /xxx/MACS/xxx/bin/macs2).
+            Path to MACS binary (e.g. /xxx/MACS/xxx/bin/macs3).
     bed_path: str
             Path to fragments file bed file.
     name: str
@@ -490,6 +495,7 @@ class MACSCallPeak:
             The q-value (minimum FDR) cutoff to call significant regions. Default: 0.05.
     nolambda: bool, optional
             Do not consider the local bias/lambda at peak candidate regions.
+
     """
 
     def __init__(
@@ -562,9 +568,7 @@ class MACSCallPeak:
             subprocess.check_output(args=cmd, shell=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             raise RuntimeError(
-                "command '{}' return with error (code {}): {}".format(
-                    e.cmd, e.returncode, e.output
-                )
+                f"command '{e.cmd}' return with error (code {e.returncode}): {e.output}"
             )
         self.narrow_peak = self.load_narrow_peak(self.skip_empty_peaks)
 

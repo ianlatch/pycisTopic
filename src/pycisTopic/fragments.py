@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import gzip
+from collections.abc import Sequence
 from operator import itemgetter
-from typing import Literal, Sequence
+from typing import Literal
 
 import numpy as np
 import pandas as pd
@@ -10,6 +11,7 @@ import polars as pl
 import pyarrow as pa  # type: ignore[import]
 import pyarrow.csv  # type: ignore[import]
 import pyranges as pr  # type: ignore[import]
+
 from pycisTopic.genomic_ranges import intersection as gr_intersection
 from pycisTopic.utils import normalise_filepath
 
@@ -103,7 +105,7 @@ def read_fragments_to_pyranges(
             separator="\t",
             use_pyarrow=False,
             new_columns=bed_column_names[:column_count],
-            dtypes={
+            schema_overrides={
                 bed_column: dtype
                 for bed_column, dtype in {
                     "Chromosome": pl.Categorical,
@@ -263,7 +265,7 @@ def read_bed_to_polars_df(
             separator="\t",
             use_pyarrow=False,
             new_columns=bed_column_names[:column_count],
-            dtypes={
+            schema_overrides={
                 bed_column: dtype
                 for bed_column, dtype in {
                     "Chromosome": pl.Categorical,
@@ -409,7 +411,7 @@ def read_barcodes_file_to_polars_series(barcodes_tsv_filename: str) -> pl.Series
         separator="\t",
         columns=[0],
         new_columns=["CB"],
-        dtypes={"CB": pl.Categorical},
+        schema_overrides={"CB": pl.Categorical},
     ).to_series()
 
     return cbs

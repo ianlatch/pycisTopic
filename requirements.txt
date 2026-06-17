@@ -15,7 +15,7 @@ leidenalg
 loompy
 loomxpy>=0.4.2
 lxml
-MACS2
+macs3
 matplotlib
 nbsphinx
 nbsphinx_link
@@ -23,9 +23,9 @@ networkx
 numba
 numpy
 numpydoc
-pandas==1.5
+pandas>=2.2,<3
 papermill
-polars>=0.17.0
+polars>=1.0
 pybedtools
 pyBigWig
 pybiomart
@@ -47,13 +47,12 @@ statsmodels
 tables
 tmtoolkit
 tspex
-typing
 umap-learn
 xlrd
 papermill
 #igv_jupyterlab
 bs4
-MACS2
+macs3
 lxml
 tspex
 polars
@@ -65,3 +64,5 @@ nbsphinx
 nbsphinx_link
 numpydoc
 pyrle
+# pyranges (<0.0.128) imports pkg_resources, removed in setuptools 81.
+setuptools<81

@@ -1,10 +1,10 @@
-### Python 3.8
+### Python 3.11
 
 ssh r23i27n24
 source /staging/leuven/stg_00002/lcb/saibar/software/anaconda3/etc/profile.d/conda.sh # equivalent to my_conda_initialize
 
 # Create conda environment 
-# conda create -n pycisTopic_env python=3.8
+# conda create -n pycisTopic_env python=3.11
 
 conda activate pycisTopic_env
 module load GCC

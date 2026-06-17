@@ -281,9 +281,9 @@ def get_tss_profile(
         )
         # Count number of cut sites with the same CB and same position per CB.
         .pivot(
-            values="position_from_tss",
+            on="position_from_tss",
             index="CB",
-            columns="position_from_tss",
+            values="position_from_tss",
             aggregate_function="len",
         )
         # Remove "no_CB" cell barcode (was only needed for the pivot).
